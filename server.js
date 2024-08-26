@@ -1,5 +1,7 @@
+import { nanoid } from "nanoid";
 import app from "./app.js";
 import connectDB from "./db/index.js";
+import aws from "aws-sdk";
 
 const startServer = async () => {
   try {
@@ -15,3 +17,29 @@ const startServer = async () => {
 };
 
 startServer();
+
+const s3 = new aws.S3({
+  region: "us-east-1",
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+});
+
+const generateUploadURL = async () => {
+  const date = new Date();
+  const imageName = `${nanoid()}-${date.getTime()}.jpg`;
+  return await s3.getSignedUrlPromise("putObject", {
+    Bucket: "blogging-website-18",
+    Key: imageName,
+    Expires: 1000,
+    ContentType: "image/jpeg",
+  });
+};
+
+app.get("/get-upload-url", (req, res) => {
+  generateUploadURL()
+    .then((url) => res.status(200).json({ uploadURL: url }))
+    .catch((error) => {
+      console.log(error.message);
+      return res.status(500).json({ error: error.message });
+    });
+});

@@ -166,8 +166,10 @@ export const googleAuth = asyncHandler(async (req, res) => {
     const updatedPicture = picture.replace("s96-c", "s384-c");
 
     let user = await User.findOne({ "personal_info.email": email }).select(
-      "personal_info.fullname personal_info.email personal_info.profile_img google_auth "
+      "personal_info.fullname personal_info.username personal_info.email personal_info.profile_img google_auth "
     );
+
+    // console.log(user);
 
     if (user) {
       if (!user.google_auth) {
@@ -185,6 +187,7 @@ export const googleAuth = asyncHandler(async (req, res) => {
         "personal_info.email": email,
       });
       const username = email.split("@")[0];
+      console.log(username);
 
       user = new User({
         personal_info: {

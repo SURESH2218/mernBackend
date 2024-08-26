@@ -1,5 +1,4 @@
 import { Router } from "express";
-import signUpUser, { signInUser } from "../controllers/user.controller.js";
 import signUpUser, {
   signInUser,
   googleAuth,
