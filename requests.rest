@@ -1,1 +1,13 @@
-GET http://localhost:8000/get-upload-url
+POST http://localhost:8000/create-blog
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2Y2UwZThmMjFjNWNiYmQxNGFhNWFjNSIsImVtYWlsIjoicm9oaXRiYWxhMTgyMkBnbWFpbC5jb20iLCJpYXQiOjE3MjQ3ODAyNDcsImV4cCI6MTcyNDc4Mzg0N30.UgZvtLSbYSoGJGqhJS3mvZUnEpk1jnRwB3D1Eql9crs
+
+{
+    "title":"Gojo Satoru",
+    "banner":"https://example.com",
+    "desc":"khkhlkh",
+    "content":{
+        "blocks":[1,2]
+    },
+    "tags":["tags1","tag"]
+}

@@ -35,11 +35,12 @@ const generateUploadURL = async () => {
   });
 };
 
-app.get("/get-upload-url", (req, res) => {
-  generateUploadURL()
-    .then((url) => res.status(200).json({ uploadURL: url }))
-    .catch((error) => {
-      console.log(error.message);
-      return res.status(500).json({ error: error.message });
-    });
+app.get("/get-upload-url", async (req, res) => {
+  try {
+    const url = await generateUploadURL();
+    res.status(200).json({ uploadURL: url });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: error.message });
+  }
 });
