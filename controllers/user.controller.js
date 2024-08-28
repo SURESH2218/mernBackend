@@ -72,7 +72,7 @@ const signUpUser = asyncHandler(async (req, res) => {
       const accessToken = jwt.sign(
         { id: savedUser._id, email: savedUser.personal_info.email },
         accessTokenSecret,
-        { expiresIn: "1h" }
+        { expiresIn: "12h" }
       );
 
       const refreshToken = jwt.sign(
@@ -126,7 +126,7 @@ export const signInUser = asyncHandler(async (req, res) => {
     const accessToken = jwt.sign(
       { id: user._id, email: user.personal_info.email },
       process.env.SECRET_ACCESS_KEY,
-      { expiresIn: "1h" }
+      { expiresIn: "12h" }
     );
 
     const refreshToken = jwt.sign(
@@ -200,16 +200,18 @@ export const googleAuth = asyncHandler(async (req, res) => {
     const token = jwt.sign(
       { id: user._id, email: user.personal_info.email },
       accessTokenSecret,
-      { expiresIn: "1h" }
+      { expiresIn: "12h" }
     );
 
-    return res.status(200).json(
-      new ApiResponse(
-        200,
-        { user, accessToken: token }, 
-        "Authenticated with Google"
-      )
-    );
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          { user, accessToken: token },
+          "Authenticated with Google"
+        )
+      );
   } catch (error) {
     console.error(error);
     if (error instanceof ApiError) {
