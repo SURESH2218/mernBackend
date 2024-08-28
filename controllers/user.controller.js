@@ -161,15 +161,12 @@ export const googleAuth = asyncHandler(async (req, res) => {
   try {
     const decodedUser = await getAuth().verifyIdToken(accessToken);
     const { email, name, picture } = decodedUser;
-    // console.log(decodedUser);
 
     const updatedPicture = picture.replace("s96-c", "s384-c");
 
     let user = await User.findOne({ "personal_info.email": email }).select(
-      "personal_info.fullname personal_info.username personal_info.email personal_info.profile_img google_auth "
+      "personal_info.fullname personal_info.username personal_info.email personal_info.profile_img google_auth"
     );
-
-    // console.log(user);
 
     if (user) {
       if (!user.google_auth) {
@@ -178,17 +175,8 @@ export const googleAuth = asyncHandler(async (req, res) => {
           "Email was signed up without Google. Please login with password to access the account."
         );
       }
-
-      return res
-        .status(200)
-        .json(new ApiResponse(200, { user }, "Authenticated with Google"));
     } else {
-      const userDetails = await User.findOne({
-        "personal_info.email": email,
-      });
       const username = email.split("@")[0];
-      console.log(username);
-
       user = new User({
         personal_info: {
           fullname: name,
@@ -200,11 +188,28 @@ export const googleAuth = asyncHandler(async (req, res) => {
       });
 
       await user.save();
-
-      return res
-        .status(200)
-        .json(new ApiResponse(200, { user }, "Authenticated with Google"));
     }
+
+    const accessTokenSecret = process.env.SECRET_ACCESS_KEY;
+    const refreshTokenSecret = process.env.SECRET_REFRESH_KEY;
+
+    if (!accessTokenSecret || !refreshTokenSecret) {
+      throw new ApiError(500, "Secret keys are missing in the environment");
+    }
+
+    const token = jwt.sign(
+      { id: user._id, email: user.personal_info.email },
+      accessTokenSecret,
+      { expiresIn: "1h" }
+    );
+
+    return res.status(200).json(
+      new ApiResponse(
+        200,
+        { user, accessToken: token }, 
+        "Authenticated with Google"
+      )
+    );
   } catch (error) {
     console.error(error);
     if (error instanceof ApiError) {
@@ -217,7 +222,5 @@ export const googleAuth = asyncHandler(async (req, res) => {
       .json(new ApiResponse(500, null, "Internal Server Error"));
   }
 });
-
-
 
 export default signUpUser;
