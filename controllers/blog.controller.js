@@ -12,26 +12,28 @@ export const createBlog = asyncHandler(async (req, res) => {
       .json({ error: "You must provide a title to publish the blog" });
   }
 
-  if (!desc.length || desc.length > 200) {
-    return res
-      .status(403)
-      .json({ error: "You must provide blog desc under 200 characters" });
-  }
+  if (!draft) {
+    if (!desc.length || desc.length > 200) {
+      return res
+        .status(403)
+        .json({ error: "You must provide blog desc under 200 characters" });
+    }
 
-  if (!banner.length) {
-    return res
-      .status(403)
-      .json({ error: "You must provide banner to publish it" });
-  }
-  if (!content.blocks.length) {
-    return res
-      .status(403)
-      .json({ error: "There must be some blog content to publish it" });
-  }
-  if (!tags.length || tags.length > 10) {
-    return res
-      .status(403)
-      .json({ error: "provide tags in order to publish it,Maximum - 10" });
+    if (!banner.length) {
+      return res
+        .status(403)
+        .json({ error: "You must provide banner to publish it" });
+    }
+    if (!content.blocks.length) {
+      return res
+        .status(403)
+        .json({ error: "There must be some blog content to publish it" });
+    }
+    if (!tags.length || tags.length > 10) {
+      return res
+        .status(403)
+        .json({ error: "provide tags in order to publish it,Maximum - 10" });
+    }
   }
 
   tags = tags.map((tag) => tag.toLowerCase());
