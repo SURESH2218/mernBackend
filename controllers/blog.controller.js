@@ -1,4 +1,6 @@
 import asyncHandler from "../utils/asyncHandler.js";
+import Blog from "../Schema/Blog.js";
+import User from "../Schema/User.js";
 import { nanoid } from "nanoid";
 
 export const createBlog = asyncHandler(async (req, res) => {
@@ -34,7 +36,41 @@ export const createBlog = asyncHandler(async (req, res) => {
 
   tags = tags.map((tag) => tag.toLowerCase());
   let blogId = title.replace(/[^a-zA-Z0-9]/g, "-").trim() + nanoid();
-  console.log(blogId);
+  let blog = new Blog({
+    title,
+    desc,
+    banner,
+    content,
+    tags,
+    author: authorId,
+    blog_id: blogId,
+    draft: Boolean(draft),
+  });
 
-  return res.json({ status: "done" });
+  try {
+    const savedBlog = await blog.save();
+    let incrementalVal = draft ? 0 : 1;
+
+    try {
+      await User.findOneAndUpdate(
+        { _id: authorId },
+        {
+          $inc: { "account_info.total_posts": incrementalVal },
+          $push: { blogs: savedBlog.blogId },
+        }
+      );
+    } catch (error) {
+      console.error("User update failed:", error);
+      return res
+        .status(500)
+        .json({ error: "Failed to update user: " + error.message });
+    }
+
+    return res.json({ status: savedBlog.blog_id });
+  } catch (error) {
+    console.error("Blog save failed:", error);
+    return res
+      .status(500)
+      .json({ error: "Failed to save blog: " + error.message });
+  }
 });
