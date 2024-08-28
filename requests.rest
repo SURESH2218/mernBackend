@@ -1,13 +1,13 @@
 POST http://localhost:8000/create-blog
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2Y2UwZThmMjFjNWNiYmQxNGFhNWFjNSIsImVtYWlsIjoicm9oaXRiYWxhMTgyMkBnbWFpbC5jb20iLCJpYXQiOjE3MjQ3ODAyNDcsImV4cCI6MTcyNDc4Mzg0N30.UgZvtLSbYSoGJGqhJS3mvZUnEpk1jnRwB3D1Eql9crs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2Y2VkNDI1NGVhNzhjODkxOWZkZGJhZiIsImVtYWlsIjoic3VyZXNoYWxhYmFuaTI3ODVAZ21haWwuY29tIiwiaWF0IjoxNzI0ODMwNzU3LCJleHAiOjE3MjQ4MzQzNTd9.xmP6U1B88NO5xJA2e0HW_Vy3oNimMwPEgQLOY-84QtM
 
 {
-    "title":"Gojo Satoru",
-    "banner":"https://example.com",
-    "desc":"khkhlkh",
+    "title":"Gojo Satorus",
+    "banner":"https://example.coms",
+    "desc":"khkhlkssh",
     "content":{
-        "blocks":[1,2]
+        "blocks":[1,3]
     },
-    "tags":["tags1","tag"]
+    "tags":["tags1","tag","sdfsd"]
 }
