@@ -78,6 +78,7 @@ export const createBlog = asyncHandler(async (req, res) => {
 });
 
 export const latestBlogs = asyncHandler(async (req, res) => {
+  let { page } = req.body;
   let maxLimit = 5;
   try {
     let blogs = await Blog.find({ draft: false })
@@ -87,6 +88,7 @@ export const latestBlogs = asyncHandler(async (req, res) => {
       )
       .sort({ publishedAt: -1 })
       .select("blog_id title desc banner activity tags publishedAt -_id")
+      .skip((page - 1) * maxLimit)
       .limit(maxLimit);
     return res.status(200).json({ blogs });
   } catch (error) {
@@ -115,4 +117,43 @@ export const trendingBlogs = asyncHandler(async (req, res) => {
   }
 });
 
+export const searchBlogs = asyncHandler(async (req, res) => {
+  let { tag, page } = req.body;
+  let findQuery = { tags: tag, draft: false };
+  let maxLimit = 2;
+  try {
+    let blogs = await Blog.find(findQuery)
+      .populate(
+        "author",
+        "personal_info.profile_img personal_info.username personal_info.fullname -_id"
+      )
+      .sort({ publishedAt: -1 })
+      .select("blog_id title desc banner activity tags publishedAt -_id")
+      .skip((page - 1) * maxLimit)
+      .limit(maxLimit);
+    return res.status(200).json({ blogs });
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
 
+export const allLatestBlogsCount = asyncHandler(async (req, res) => {
+  try {
+    const count = await Blog.countDocuments({ draft: false });
+    return res.status(200).json({ totalDocs: count });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+export const searchBlogsCount = asyncHandler(async (req, res) => {
+  try {
+    let { tag } = req.body;
+    let findQuery = { tags: tag, draft: false };
+    const count = await Blog.countDocuments(findQuery);
+    return res.status(209).json({ totalDocs: count });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: error });
+  }
+});
