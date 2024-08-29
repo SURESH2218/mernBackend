@@ -93,3 +93,26 @@ export const latestBlogs = asyncHandler(async (req, res) => {
     return res.status(500).json({ error: error });
   }
 });
+
+export const trendingBlogs = asyncHandler(async (req, res) => {
+  let maxLimit = 5;
+  try {
+    let blogs = await Blog.find({ draft: false })
+      .populate(
+        "author",
+        "personal_info.profile_img personal_info.username personal_info.fullname -_id"
+      )
+      .sort({
+        "activity.total_reads": -1,
+        "activity.total_likes": -1,
+        publishedAt: -1,
+      })
+      .select("blog_id title publishedAt -_id")
+      .limit(maxLimit);
+    return res.status(200).json({ blogs });
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
+
+
