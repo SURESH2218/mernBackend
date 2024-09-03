@@ -241,4 +241,17 @@ export const searchUser = asyncHandler(async (req, res) => {
   }
 });
 
+export const getProfile = asyncHandler(async (req, res) => {
+  let { username } = req.body;
+  try {
+    let user = await User.findOne({
+      "personal_info.username": username,
+    }).select("-personal_info.password -google_auth -updatedAt -blogs");
+    return res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+    return res.status(403).json({ error: error.message });
+  }
+});
+
 export default signUpUser;

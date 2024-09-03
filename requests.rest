@@ -1,6 +1,6 @@
-POST http://localhost:8000/search-users
+POST http://localhost:8000/get-profile
 Content-Type: application/json
 
 {
-  "query":"sureshalabani"
+  "username":"sureshalabani2785"
 }

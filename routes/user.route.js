@@ -3,6 +3,7 @@ import signUpUser, {
   signInUser,
   googleAuth,
   searchUser,
+  getProfile,
 } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middleware/auth.middleware.js";
 import {
@@ -26,5 +27,6 @@ router.route("/search-blogs").post(searchBlogs);
 router.route("/all-latest-blogs-count").post(allLatestBlogsCount);
 router.route("/search-blogs-count").post(searchBlogsCount);
 router.route("/search-users").post(searchUser);
+router.route("/get-profile").post(getProfile);
 
 export default router;
