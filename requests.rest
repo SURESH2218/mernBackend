@@ -2,5 +2,6 @@ POST http://localhost:8000/search-blogs
 Content-Type: application/json
 
 {
-    "tag":"anime"
+  "query": "jiraiya",
+  "draft": false
 }
