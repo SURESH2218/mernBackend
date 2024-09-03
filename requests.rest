@@ -1,7 +1,6 @@
-POST http://localhost:8000/search-blogs
+POST http://localhost:8000/search-users
 Content-Type: application/json
 
 {
-  "query": "jiraiya",
-  "draft": false
+  "query":"sureshalabani"
 }

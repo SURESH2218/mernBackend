@@ -225,4 +225,20 @@ export const googleAuth = asyncHandler(async (req, res) => {
   }
 });
 
+export const searchUser = asyncHandler(async (req, res) => {
+  let { query } = req.body;
+  try {
+    let users = await User.find({
+      "personal_info.username": new RegExp(query, "i"),
+    })
+      .limit(50)
+      .select(
+        "personal_info.fullname personal_info.username personal_info.profile_img -_id"
+      );
+    return res.status(200).json({ users });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
 export default signUpUser;

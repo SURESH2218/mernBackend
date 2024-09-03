@@ -2,6 +2,7 @@ import { Router } from "express";
 import signUpUser, {
   signInUser,
   googleAuth,
+  searchUser,
 } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middleware/auth.middleware.js";
 import {
@@ -24,5 +25,6 @@ router.route("/trending-blogs").get(trendingBlogs);
 router.route("/search-blogs").post(searchBlogs);
 router.route("/all-latest-blogs-count").post(allLatestBlogsCount);
 router.route("/search-blogs-count").post(searchBlogsCount);
+router.route("/search-users").post(searchUser);
 
 export default router;
