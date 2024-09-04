@@ -126,28 +126,9 @@ export const allLatestBlogsCount = asyncHandler(async (req, res) => {
   }
 });
 
-export const searchBlogsCount = asyncHandler(async (req, res) => {
-  try {
-    let findQuery;
-    let { tag, query } = req.body;
-    if (tag) {
-      findQuery = { tags: tag, draft: false };
-      // console.log(findQuery, "tag");
-    } else if (query) {
-      findQuery = { draft: false, title: new RegExp(query, "i") };
-      console.log(findQuery, "query");
-    }
-    const count = await Blog.countDocuments(findQuery);
-    return res.status(209).json({ totalDocs: count });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ error: error });
-  }
-});
-
 export const searchBlogs = asyncHandler(async (req, res) => {
   try {
-    let { tag, query, page } = req.body;
+    let { tag, query, author, page } = req.body;
     let findQuery;
     if (tag) {
       findQuery = { tags: tag, draft: false };
@@ -155,6 +136,8 @@ export const searchBlogs = asyncHandler(async (req, res) => {
     } else if (query) {
       findQuery = { draft: false, title: new RegExp(query, "i") };
       console.log(findQuery, "query");
+    } else if (author) {
+      findQuery = { author, draft: false };
     }
     // console.log("Find Query:", findQuery);
     let maxLimit = 5;
@@ -169,6 +152,27 @@ export const searchBlogs = asyncHandler(async (req, res) => {
       .limit(maxLimit);
     return res.status(200).json({ blogs });
   } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
+
+export const searchBlogsCount = asyncHandler(async (req, res) => {
+  try {
+    let findQuery;
+    let { tag, author, query } = req.body;
+    if (tag) {
+      findQuery = { tags: tag, draft: false };
+      // console.log(findQuery, "tag");
+    } else if (query) {
+      findQuery = { draft: false, title: new RegExp(query, "i") };
+      console.log(findQuery, "query");
+    } else if (author) {
+      findQuery = { author, draft: false };
+    }
+    const count = await Blog.countDocuments(findQuery);
+    return res.status(209).json({ totalDocs: count });
+  } catch (error) {
+    console.log(error);
     return res.status(500).json({ error: error });
   }
 });
